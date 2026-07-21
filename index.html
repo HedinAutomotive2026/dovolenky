@@ -1,0 +1,164 @@
+﻿<!doctype html>
+<html lang="sk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dovolenky - webov? asistent</title>
+    <meta name="theme-color" content="#0f766e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Dovolenky" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow">Dovolenky</p>
+          <h1>Webov? asistent kapacity dielne</h1>
+        </div>
+        <div class="top-status">
+          <div class="today" id="todayLabel"></div>
+          <div class="data-updated" id="dataUpdatedLabel">Dáta aktualizované: 21.7.2026 01:27</div>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <form class="entry-panel" id="vacationForm">
+          <div class="section-head">
+            <h2>Nov? dovolenka</h2>
+            <span id="employeeCount"></span>
+          </div>
+
+          <label class="field wide">
+            <span>Meno</span>
+            <input id="employeeSearch" list="employeeOptions" autocomplete="off" placeholder="Za?nite p?sa? meno" required />
+            <datalist id="employeeOptions"></datalist>
+          </label>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Od</span>
+              <input id="dateFrom" type="date" required />
+            </label>
+            <label class="field">
+              <span>Do</span>
+              <input id="dateTo" type="date" required />
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Typ</span>
+            <select id="leaveType">
+              <option>Dovolenka</option>
+              <option>N?hradn? vo?no</option>
+              <option>PN</option>
+              <option>In?</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Pozn?mka</span>
+            <input id="note" placeholder="Volite?n?" />
+          </label>
+
+          <div class="result" id="capacityResult">
+            <strong>Vyberte meno a d?tum.</strong>
+            <span>Kontrola kapacity sa zobraz? automaticky.</span>
+          </div>
+
+          <button class="primary" type="submit">Prida? dovolenku</button>
+        </form>
+
+        <section class="status-panel">
+          <div class="section-head">
+            <h2>Stav dielne</h2>
+            <div class="filters">
+              <label class="filter-field employee-filter">
+                <span>Zamestnanec</span>
+                <input id="employeeFilter" list="employeeFilterOptions" autocomplete="off" placeholder="HÄľadaĹĄ meno" />
+                <datalist id="employeeFilterOptions"></datalist>
+              </label>
+              <select id="centerFilter" aria-label="Filter strediska"></select>
+              <select id="absenceStatusFilter" aria-label="Filter stavu dovolenky">
+                <option value="all">V?etky stavy</option>
+                <option value="approved">Schv?len?</option>
+                <option value="planned">Pl?novan?</option>
+              </select>
+              <select id="absenceTypeFilter" aria-label="Filter typu nepr?tomnosti"></select>
+            </div>
+          </div>
+          <div class="metrics" id="metrics"></div>
+          <div class="capacity-list" id="capacityList"></div>
+        </section>
+      </section>
+
+      <section class="lower-grid">
+        <section class="table-panel">
+          <div class="section-head">
+            <div>
+              <h2>Napl?novan? dovolenky</h2>
+              <div class="tabs" role="tablist" aria-label="Zobrazenie dovoleniek">
+                <button type="button" class="tab active" id="listTab">Zoznam</button>
+                <button type="button" class="tab" id="calendarTab">Kalend?r</button>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" class="secondary" id="importAbsBtn">Na??ta? AbsList</button>
+              <input type="file" id="reportFileInput" accept=".xlsx,.xls" hidden />
+              <button type="button" class="secondary" id="exportBtn">Export CSV</button>
+              <button type="button" class="danger" id="clearBtn">Vymazať všetko</button>
+            </div>
+          </div>
+          <div class="list-view" id="listView">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Meno</th>
+                    <th>Stredisko</th>
+                    <th>Od</th>
+                    <th>Do</th>
+                    <th>Dni</th>
+                    <th>Stav</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="vacationRows"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="calendar-view" id="calendarView" hidden>
+            <div class="print-calendar-title" id="printCalendarTitle"></div>
+            <div class="print-calendar-meta" id="printCalendarMeta"></div>
+            <div class="calendar-toolbar">
+              <button type="button" class="secondary" id="prevMonthBtn">Predo?l? mesiac</button>
+              <label class="month-field">
+                <span>Mesiac</span>
+                <input type="month" id="calendarMonth" />
+              </label>
+              <button type="button" class="secondary" id="nextMonthBtn">?al?? mesiac</button>
+              <button type="button" class="secondary" id="printCalendarBtn">TlaÄŤiĹĄ kalend?r PDF</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+        </section>
+
+        <section class="settings-panel">
+          <div class="section-head">
+            <h2>Kapacity</h2>
+            <button type="button" class="secondary" id="resetCapacityBtn">ObnoviĹĄ</button>
+          </div>
+          <div id="capacitySettings"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="xlsx.full.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
+
